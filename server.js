@@ -3,7 +3,10 @@ var express = require('express'),
   fs = require('fs'),
   app = express(),
   eps = require('ejs'),
-  morgan = require('morgan');
+  morgan = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
+  path = require('path');
 
 
 //rocksdb
@@ -13,6 +16,27 @@ var ldb = level('./dbLevelTest', {
   valueEncoding: 'json'
 })
 //
+
+//from app.js
+app.use(express.static(path.join(__dirname, 'public')));
+
+var location = require('./routes/location')
+var widget = require('./routes/widget')
+var employee = require('./routes/employee')
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+//
+
+// Routes (using rocksdb)
+app.use('/api',location);
+app.use('/api',widget);
+app.use('/api',employee);
+//
+
+
+
 
 Object.assign = require('object-assign')
 
